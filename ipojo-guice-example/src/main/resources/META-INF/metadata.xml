@@ -2,8 +2,4 @@
        xsi:schemaLocation="org.apache.felix.ipojo http://felix.apache.org/ipojo/schemas/CURRENT/core.xsd"
        xmlns="org.apache.felix.ipojo">
 	
-	<instance component="org.ow2.jonas.ipojo.guice.example.GuiceInjectedComponent" />
-	
-	<instance component="org.ow2.jonas.ipojo.guice.example.module.SampleModule"
-	          name="sample-module" />
 </ipojo>
