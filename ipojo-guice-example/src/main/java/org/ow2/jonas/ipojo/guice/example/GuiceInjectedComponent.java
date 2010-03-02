@@ -7,7 +7,7 @@ import org.ow2.jonas.ipojo.guice.GuiceSupport;
 import com.google.inject.Inject;
 
 @Component
-@GuiceSupport(name = "sample")
+@GuiceSupport(name = "sample-injector")
 public class GuiceInjectedComponent {
 
 	@Inject

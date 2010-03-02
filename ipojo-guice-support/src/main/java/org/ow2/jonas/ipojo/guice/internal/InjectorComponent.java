@@ -1,14 +1,18 @@
 package org.ow2.jonas.ipojo.guice.internal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Controller;
+import org.apache.felix.ipojo.annotations.Invalidate;
 import org.apache.felix.ipojo.annotations.Property;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Unbind;
+import org.apache.felix.ipojo.annotations.Validate;
 import org.osgi.framework.ServiceReference;
 import org.ow2.jonas.ipojo.guice.GuiceInjector;
 
@@ -23,12 +27,16 @@ public class InjectorComponent implements GuiceInjector {
     /**
      * Dependent modules
      */
-    private Map<String, Module> modules;
+    private Map<ServiceReference, Module> modules;
 
     /**
      * Constructed Injector from the modules.
      */
     private Injector injector;
+    
+    @Property(name = "modules",
+            mandatory = true)
+    private List<String> required;
 
     /**
      * Controller attribute (set when all dependent modules are availables).
@@ -37,53 +45,54 @@ public class InjectorComponent implements GuiceInjector {
     private boolean valid;
     
     public InjectorComponent() {
-        modules = new HashMap<String, Module>();
-    }
-    
-    @Property(name = "modules",
-              mandatory = true)
-    public void setModuleNames(String[] names) {
-        for (String name : names) {
-            modules.put(name, null);
-        }
+        System.out.println("InjectorComponent created");
+        modules = new HashMap<ServiceReference, Module>();
     }
     
     public Injector getInjector() {
         if (injector == null) {
-            injector = Guice.createInjector(modules.values());
+            injector = Guice.createInjector(getRequiredModules());
         }
         return injector;
     }
 
-    @Bind(optional = false)
+    @Bind(optional = false, aggregate = true)
     public void bindModule(Module service, ServiceReference ref) {
         String name = (String) ref.getProperty("instance.name");
         System.out.println("bindModule: " + name);
-        if (modules.containsKey(name)) {
-            modules.put(name, service);
-        }
-        updateStatus();
+        modules.put(ref, service);
+        valid = (getRequiredModules().size() == required.size()); 
     }
 
-    private void updateStatus() {
-        boolean allModulesAreAvailables = true;
-        for (Map.Entry<String, Module> entry : modules.entrySet()) {
+    private List<Module> getRequiredModules() {
+        List<Module> availables = new ArrayList<Module>();
+        for (Map.Entry<ServiceReference, Module> entry : modules.entrySet()) {
             System.out.println("updateStatus >" +entry.getKey()+ "< = >" +entry.getValue()+ "<");
-            if (entry.getValue() == null) {
-                allModulesAreAvailables = false;
+            if (required.contains(entry.getKey().getProperty("instance.name"))) {
+                availables.add(entry.getValue());
             }
         }
 
-        valid = allModulesAreAvailables;
+        return availables;
     }
 
     @Unbind
     public void unbindModule(Module service, ServiceReference ref) {
         String name = (String) ref.getProperty("instance.name");
         System.out.println("unbindModule: " + name);
-        if (modules.containsKey(name)) {
-            modules.remove(name);
-        }
-        updateStatus();
+        modules.remove(ref);
+        valid = (getRequiredModules().size() == required.size());
     }
+    
+    @Validate
+    public void start() {
+        System.out.println("Start " + getClass().getSimpleName());
+    }
+
+    @Invalidate
+    public void stop() {
+        System.out.println("Stop " + getClass().getSimpleName());
+    }
+
+
 }

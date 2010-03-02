@@ -1,0 +1,11 @@
+<ipojo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="org.apache.felix.ipojo http://felix.apache.org/ipojo/schemas/CURRENT/core.xsd"
+       xmlns="org.apache.felix.ipojo">
+
+	<instance component="org.ow2.jonas.ipojo.guice.example.module.SampleModule"
+	          name="sample-module" />
+	          
+	<instance component="org.ow2.jonas.ipojo.guice.example.module.AnotherModule"
+	          name="another-module" />
+	          
+</ipojo>

@@ -14,6 +14,10 @@
   <modules>
   	<module>ipojo-guice-support</module>
   	<module>ipojo-guice-example</module>
+  	<module>ipojo-guice-example-instances</module>
+  	<module>ipojo-guice-example-modules-instances</module>
+  	<module>ipojo-guice-example-injector-instance</module>
+  	<module>ipojo-guice-example-component-instance</module>
   	<module>ipojo-guice-it</module>
   </modules>
   

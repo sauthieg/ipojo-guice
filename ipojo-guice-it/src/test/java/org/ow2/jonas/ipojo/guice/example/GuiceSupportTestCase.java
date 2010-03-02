@@ -70,7 +70,7 @@ public class GuiceSupportTestCase {
         // Create component
         Dictionary<String, Object> componentConfig = new Hashtable<String, Object>();
         componentConfig.put("injector.name", "sample");
-        ComponentInstance cmp = injectorComponentFactory.createComponentInstance(componentConfig);
+        ComponentInstance cmp = sampleComponentFactory.createComponentInstance(componentConfig);
         cmp.start();
         assertThat(cmp.getState(), is(ComponentInstance.VALID));
         
