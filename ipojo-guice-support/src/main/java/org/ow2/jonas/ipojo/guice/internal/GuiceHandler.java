@@ -33,9 +33,6 @@ public class GuiceHandler extends PrimitiveHandler {
 
     private Map<ServiceReference, GuiceInjector> injectors;
     
-    @Controller
-    private boolean validity;
-
     public GuiceHandler() {
         injectors = new Hashtable<ServiceReference, GuiceInjector>();
     }
@@ -62,7 +59,7 @@ public class GuiceHandler extends PrimitiveHandler {
             }
         }
         
-        System.out.println("configure : " + injectorName);
+        System.out.println("configure : requires injector " + injectorName);
 
         // Update validity of this Handler
         updateValidity();
@@ -70,35 +67,37 @@ public class GuiceHandler extends PrimitiveHandler {
 
     private void updateValidity() {
         // It is possible that this method is called BEFORE configure()
-        System.out.println("updateValidity()");
+        System.out.println("entering:updateValidity()");
         GuiceInjector found = null;
         if (injectorName != null) {
-            System.out.println("updateValidity() -> " + injectorName);
-            for (Entry<ServiceReference, GuiceInjector> guice : injectors
-                    .entrySet()) {
-                String name = (String) guice.getKey().getProperty(
-                        "instance.name");
-                System.out.println("updateValidity() ? " + name);
+            System.out.println("updateValidity() -> searching " + injectorName);
+            for (Entry<ServiceReference, GuiceInjector> guice : injectors.entrySet()) {
+                String name = (String) guice.getKey().getProperty("instance.name");
+                System.out.println("updateValidity() proposed injector " + name);
                 if (injectorName.equals(name)) {
                     found = guice.getValue();
                 }
             }
 
+            Pojo me = (Pojo) this;
+            System.out.println("description " + me.getComponentInstance().getInstanceDescription().getDescription());
+
             if (found != null) {
-                System.out.println("updateValidity() = " + found);
+                System.out.println("updateValidity() found injector " + found);
                 System.out.println("updateValidity() state (old) " + getInstanceManager().getState());
                 injector = found;
-                validity = true;
-                Pojo me = (Pojo) this;
+                setValidity(true);
                 System.out.println("updateValidity() state (new) " + getInstanceManager().getState());
-                System.out.println(me.getComponentInstance().getInstanceDescription().getDescription());
+
             } else {
-                validity = false;
+                System.out.println("updateValidity() injector not found");
+                setValidity(false);
             }
         }
+        System.out.println("exiting:updateValidity() with state: " + getValidity());
     }
 
-    @Bind(optional = false, aggregate = true)
+    @Bind(optional = true, aggregate = true)
     public void bindGuiceInjector(GuiceInjector service, ServiceReference ref) {
         String name = (String) ref.getProperty("instance.name");
         System.out.println("bindGuiceInjector: " + name);

@@ -8,7 +8,7 @@ public class GuiceOptions {
         MavenArtifactProvisionOption option = new MavenArtifactProvisionOption();
         option.groupId("org.apache.felix")
               .artifactId("org.apache.felix.ipojo")
-              .version("1.4.0");
+              .version("1.6.2");
         return option;
     }
 

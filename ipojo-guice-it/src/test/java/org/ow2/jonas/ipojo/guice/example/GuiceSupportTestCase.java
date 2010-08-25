@@ -9,9 +9,7 @@ import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.Properties;
+import java.util.*;
 
 import org.apache.felix.ipojo.ComponentInstance;
 import org.apache.felix.ipojo.Factory;
@@ -62,7 +60,9 @@ public class GuiceSupportTestCase {
         // Create injector
         Dictionary<String, Object> injectorProperties = new Hashtable<String, Object>();
         injectorProperties.put("instance.name", "sample");
-        injectorProperties.put("modules", new String[] {"module1"});
+        List<String> modules = new ArrayList<String>();
+        modules.add("module1");
+        injectorProperties.put("modules", modules);
         ComponentInstance injector = injectorComponentFactory.createComponentInstance(injectorProperties);
         injector.start();
         assertThat(injector.getState(), is(ComponentInstance.VALID));
@@ -73,6 +73,8 @@ public class GuiceSupportTestCase {
         ComponentInstance cmp = sampleComponentFactory.createComponentInstance(componentConfig);
         cmp.start();
         assertThat(cmp.getState(), is(ComponentInstance.VALID));
+
+        System.out.println("Test finished .... we should exit now");
         
         // TODO add interface to the component to check the result
     }

@@ -35,7 +35,7 @@ public class InjectorComponent implements GuiceInjector {
     private Injector injector;
     
     @Property(name = "modules",
-            mandatory = true)
+              mandatory = true)
     private List<String> required;
 
     /**
