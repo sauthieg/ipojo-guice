@@ -13,10 +13,10 @@ A component that want to take advantage of this integration needs to perform the
 
 Creates a classical Guice module that will be exported as an OSGi service.
 
-   @Component
-   @Provides(specifications = Module.class)
-   @Instanciate
-   public class SampleModule extends AbstractModule {
+    @Component
+    @Provides(specifications = Module.class)
+    @Instanciate
+    public class SampleModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
