@@ -61,8 +61,6 @@ public class GuiceHandler extends PrimitiveHandler {
         
         System.out.println("configure : requires injector " + injectorName);
 
-        // Update validity of this Handler
-        updateValidity();
     }
 
     private void updateValidity() {
@@ -78,9 +76,6 @@ public class GuiceHandler extends PrimitiveHandler {
                     found = guice.getValue();
                 }
             }
-
-            Pojo me = (Pojo) this;
-            System.out.println("description " + me.getComponentInstance().getInstanceDescription().getDescription());
 
             if (found != null) {
                 System.out.println("updateValidity() found injector " + found);
@@ -117,6 +112,9 @@ public class GuiceHandler extends PrimitiveHandler {
     @Override
     public void start() {
         System.out.println("Starting Guice Handler ...");
+        // Update validity of this Handler
+        updateValidity();
+        
     }
 
     @Override
