@@ -45,7 +45,6 @@ public class InjectorComponent implements GuiceInjector {
     private boolean valid;
     
     public InjectorComponent() {
-        System.out.println("InjectorComponent created");
         modules = new HashMap<ServiceReference, Module>();
     }
     
@@ -58,8 +57,6 @@ public class InjectorComponent implements GuiceInjector {
 
     @Bind(optional = false, aggregate = true)
     public void bindModule(Module service, ServiceReference ref) {
-        String name = (String) ref.getProperty("instance.name");
-        System.out.println("bindModule: " + name);
         modules.put(ref, service);
         valid = (getRequiredModules().size() == required.size()); 
     }
@@ -67,7 +64,6 @@ public class InjectorComponent implements GuiceInjector {
     private List<Module> getRequiredModules() {
         List<Module> availables = new ArrayList<Module>();
         for (Map.Entry<ServiceReference, Module> entry : modules.entrySet()) {
-            System.out.println("updateStatus >" +entry.getKey()+ "< = >" +entry.getValue()+ "<");
             if (required.contains(entry.getKey().getProperty("instance.name"))) {
                 availables.add(entry.getValue());
             }
@@ -78,21 +74,14 @@ public class InjectorComponent implements GuiceInjector {
 
     @Unbind
     public void unbindModule(Module service, ServiceReference ref) {
-        String name = (String) ref.getProperty("instance.name");
-        System.out.println("unbindModule: " + name);
         modules.remove(ref);
         valid = (getRequiredModules().size() == required.size());
     }
     
     @Validate
-    public void start() {
-        System.out.println("Start " + getClass().getSimpleName());
-    }
+    public void start() { }
 
     @Invalidate
-    public void stop() {
-        System.out.println("Stop " + getClass().getSimpleName());
-    }
-
+    public void stop() { }
 
 }

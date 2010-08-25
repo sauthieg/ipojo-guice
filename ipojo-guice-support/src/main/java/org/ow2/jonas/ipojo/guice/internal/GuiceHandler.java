@@ -58,44 +58,30 @@ public class GuiceHandler extends PrimitiveHandler {
                 throw new ConfigurationException("Missing 'name' attribute.");
             }
         }
-        
-        System.out.println("configure : requires injector " + injectorName);
-
     }
 
     private void updateValidity() {
         // It is possible that this method is called BEFORE configure()
-        System.out.println("entering:updateValidity()");
         GuiceInjector found = null;
         if (injectorName != null) {
-            System.out.println("updateValidity() -> searching " + injectorName);
             for (Entry<ServiceReference, GuiceInjector> guice : injectors.entrySet()) {
                 String name = (String) guice.getKey().getProperty("instance.name");
-                System.out.println("updateValidity() proposed injector " + name);
                 if (injectorName.equals(name)) {
                     found = guice.getValue();
                 }
             }
 
             if (found != null) {
-                System.out.println("updateValidity() found injector " + found);
-                System.out.println("updateValidity() state (old) " + getInstanceManager().getState());
                 injector = found;
                 setValidity(true);
-                System.out.println("updateValidity() state (new) " + getInstanceManager().getState());
-
             } else {
-                System.out.println("updateValidity() injector not found");
                 setValidity(false);
             }
         }
-        System.out.println("exiting:updateValidity() with state: " + getValidity());
     }
 
     @Bind(optional = true, aggregate = true)
     public void bindGuiceInjector(GuiceInjector service, ServiceReference ref) {
-        String name = (String) ref.getProperty("instance.name");
-        System.out.println("bindGuiceInjector: " + name);
         // services are injected BEFORE configure() is called
         injectors.put(ref, service);
         updateValidity();
@@ -103,24 +89,18 @@ public class GuiceHandler extends PrimitiveHandler {
 
     @Unbind
     public void unbindGuiceInjector(GuiceInjector service, ServiceReference ref) {
-        String name = (String) ref.getProperty("instance.name");
-        System.out.println("unbindGuiceInjector: " + name);
         injectors.remove(ref);
         updateValidity();
     }
 
     @Override
     public void start() {
-        System.out.println("Starting Guice Handler ...");
         // Update validity of this Handler
         updateValidity();
-        
     }
 
     @Override
-    public void stop() {
-        System.out.println("Stopping Guice Handler ...");
-    }
+    public void stop() { }
 
     @Override
     public void onCreation(Object instance) {
