@@ -22,27 +22,27 @@ Creates a classical Guice module that will be exported as an OSGi service.
 	protected void configure() {
 		bind(IRandom.class).to(Randomizer.class);
 	}
-   }
+    }
 
 and it's associate instance (needs to provide a name that we will use later):
 
-   <ipojo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="org.apache.felix.ipojo http://felix.apache.org/ipojo/schemas/CURRENT/core.xsd"
-       xmlns="org.apache.felix.ipojo">
+    <ipojo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="org.apache.felix.ipojo http://felix.apache.org/ipojo/schemas/CURRENT/core.xsd"
+           xmlns="org.apache.felix.ipojo">
 
 	<instance component="org.ow2.jonas.ipojo.guice.example.module.SampleModule"
 	          name="sample-module" />
 
-   </ipojo>
+    </ipojo>
 
 
 ## Injector component
 
 Just define an instance of the pre-defined GuiceInjectorComponent provided by this library.
 
-   <ipojo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="org.apache.felix.ipojo http://felix.apache.org/ipojo/schemas/CURRENT/core.xsd"
-       xmlns="org.apache.felix.ipojo">
+    <ipojo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="org.apache.felix.ipojo http://felix.apache.org/ipojo/schemas/CURRENT/core.xsd"
+           xmlns="org.apache.felix.ipojo">
 
 	<instance component="org.ow2.jonas.ipojo.guice.internal.InjectorComponent"
 	          name="sample-injector">
@@ -51,15 +51,15 @@ Just define an instance of the pre-defined GuiceInjectorComponent provided by th
 	    </property>
 	</instance>
 
-   </ipojo>
+    </ipojo>
 
 ## Injected component
 
 Creates a classic iPOJO component that will be annotated with the @GuiceSupport annotation.
 
-   @Component
-   @GuiceSupport(name = "sample-injector")
-   public class GuiceInjectedComponent {
+    @Component
+    @GuiceSupport(name = "sample-injector")
+    public class GuiceInjectedComponent {
 
 	@Inject
 	private IRandom randomizer;
@@ -68,14 +68,14 @@ Creates a classic iPOJO component that will be annotated with the @GuiceSupport 
 	public void start() {
 		System.out.println("Random number: " + randomizer.getRandom());
 	}
-   }
+    }
 
 ## Runtime
 
 Once the bundles have been started, you should see the following output:
 
-   Start SampleModule
-   Random number: 0.10249957740836657
+    Start SampleModule
+    Random number: 0.10249957740836657
 
 Toughts (for the future)
 --------
